@@ -149,7 +149,7 @@ namespace HexagonBrains.RedblobHexs
 			return new Hex(qi, ri, si);
 		}
 
-
+		// I know tihs is misspelled
 		public FractionalHex HexLerp(FractionalHex b, double t)
 		{
 			return new FractionalHex(q * (1.0 - t) + b.q * t, r * (1.0 - t) + b.r * t, s * (1.0 - t) + b.s * t);
@@ -164,6 +164,21 @@ namespace HexagonBrains.RedblobHexs
 			List<Hex> results = new List<Hex> { };
 			double step = 1.0 / Math.Max(N, 1);
 			for (int i = 0; i <= N; i++)
+			{
+				results.Add(a_nudge.HexLerp(b_nudge, step * i).HexRound());
+			}
+			return results;
+		}
+
+		static public List<Hex> HexLinedrawPrime(Hex a, Hex b, int sensitivity)
+		{
+			int N = a.Distance(b);
+			int N2 = sensitivity * N;
+			FractionalHex a_nudge = new FractionalHex(a.q - 1e-06, a.r - 1e-06, a.s + 2e-06);
+			FractionalHex b_nudge = new FractionalHex(b.q - 1e-06, b.r - 1e-06, b.s + 2e-06);
+			List<Hex> results = new List<Hex> { };
+			double step = 1.0 / Math.Max(N2, 1);
+			for (int i = 0; i <= N2; i++)
 			{
 				results.Add(a_nudge.HexLerp(b_nudge, step * i).HexRound());
 			}

@@ -7,10 +7,13 @@
         mc:Ignorable="d"
         Height="200"
         Width="200"
+        ResizeMode="NoResize"
         Name="MyWindow">
     <Grid x:Name="MainGrid">
-        <!--<Polygon x:Name="poly1" Fill="Black" Stroke="Blue" Points="0,0 100,0 100,100 0,100" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
-        <Line X1="10" Y1="10" X2="200" Y2="200" Stroke="Black"/>
+        <!---<Polygon x:Name="poly1" Fill="Black" Stroke="Blue" Points="0,0 100,0 100,100 0,100" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Line X1="10" Y1="10" X2="200" Y2="200" Stroke="Black"/>-->
+        <TextBox Name="FirstHexInput" BorderBrush="Black" Height="50" Width="100"> Test Text</TextBox>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" Name="InfoText" FontSize="12">Place Holder</TextBlock>
     </Grid>
-    
+    <!--<Canvas Name="MyCanvas"></Canvas>-->
 </Window>
