@@ -4,11 +4,7 @@ using System.Windows.Shapes;
 using HexagonBrains;
 using System.Collections.Generic;
 using System;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Security.Policy;
-using HexagonBrains.RedblobHexs;
 using System.Linq;
-using System.Windows.Ink;
 using System.Windows.Controls;
 
 namespace Hexagons_Are_Bestagons
