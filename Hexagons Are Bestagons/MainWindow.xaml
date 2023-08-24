@@ -12,8 +12,10 @@
     <Grid x:Name="MainGrid">
         <!---<Polygon x:Name="poly1" Fill="Black" Stroke="Blue" Points="0,0 100,0 100,100 0,100" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <Line X1="10" Y1="10" X2="200" Y2="200" Stroke="Black"/>-->
-        <TextBox Name="FirstHexInput" BorderBrush="Black" Height="50" Width="100"> Test Text</TextBox>
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" Name="InfoText" FontSize="12">Place Holder</TextBlock>
+        <TextBox Name="FirstHexInput" BorderBrush="Black" Height="50" Width="100" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,50">(1,1)0101</TextBox>
+        <TextBox Name="SecondHexInput" BorderBrush="Black" Height="50" Width="100" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,134,0,0" >(1,1)0202</TextBox>
+        <Button Name="SubmitButton" Content="Submit" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="100" Width="50" Click="Submit"/>
     </Grid>
     <!--<Canvas Name="MyCanvas"></Canvas>-->
 </Window>

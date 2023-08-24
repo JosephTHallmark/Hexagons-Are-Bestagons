@@ -21,7 +21,7 @@ namespace Hexagons_Are_Bestagons
 		private HexagonSolver Solver { get; set; }
 		public Dictionary<Tuple<int, int>, Polygon> polys;
 		private double ratio;
-		private KeyValuePair<Tuple<int, int>, Hex>? FirstHex;
+		private KeyValuePair<Tuple<int, int>, BTHex>? FirstHex;
 		private Line? LOS;
 		private Line? LOS2;
 		private int textBuffer = 200;
@@ -31,8 +31,8 @@ namespace Hexagons_Are_Bestagons
 			InitializeComponent();
 			DataContext = this;
 			// Prompt for size and then init an array of hexagons 
-			int mapsX = 2;
-			int mapsY = 2;
+			int mapsX = 5;
+			int mapsY = 5;
 
 			Solver = HexagonSolver.SolverFromBattletechMaps(mapsX, mapsY, 15, 17);
 			//Solver = new HexagonSolver(cols, rows, size);
@@ -58,33 +58,18 @@ namespace Hexagons_Are_Bestagons
 
 			Grid.SetColumn(InfoText, 1);
 			Grid.SetColumn(FirstHexInput, 1);
+			Grid.SetColumn(SecondHexInput, 1);
+			Grid.SetColumn(SubmitButton, 1);
+
 
 			Random randy = new Random();
-			foreach (var hexagon in Solver.HexagonsAsBTHexs)
+			foreach (var hexagon in Solver.BTHexesByTII)
 			{
 				var poly = new Polygon()
 				{
 					Points = Helpers.HexPointsToPointsColl(Solver.ourLayout.PolygonCorners(hexagon.Value.Hexagon)),
-					Fill = new SolidColorBrush()
-					{
-						Color = new Color()
-						{
-							A = 255,
-							R = 0,
-							G = 0,
-							B = 0
-						}
-					},
-					Stroke = new SolidColorBrush()
-					{
-						Color = new Color()
-						{
-							A = 255,
-							R = 255,
-							G = 255,
-							B = 255
-						}
-					}
+					Fill = new SolidColorBrush() { Color = ((hexagon.Value.Map.y + hexagon.Value.Map.x) % 2 == 0) ? new Color() { A = 255, R = 100, G = 100, B = 100 } : new Color() { A = 255, R = 0, G = 0, B = 0 } },
+					Stroke = new SolidColorBrush() { Color = new Color() { A = 255, R = 255, G = 255, B = 255 } }
 				};
 				poly.Tag = hexagon;
 				poly.MouseDown += Poly_MouseDown;
@@ -101,30 +86,24 @@ namespace Hexagons_Are_Bestagons
 
 			if (FirstHex == null)
 			{
-				FirstHex = (KeyValuePair<Tuple<int, int>, Hex>)me.Tag;
+				FirstHex = (KeyValuePair<Tuple<int, int>, BTHex>)me.Tag;
 
-				var infotext = $"First Hex: {Solver.HexagonsAsBTHexs[FirstHex.Value.Key]}";
+				var infotext = $"First Hex: {Solver.BTHexesByTII[FirstHex.Value.Key]}";
 				InfoText.Text = infotext.ToString();
 				Reset();
 				Random randy = new Random();
 				me.Fill = new SolidColorBrush()
 				{
-					Color = new Color()
-					{
-						A = 255,
-						R = Convert.ToByte(randy.Next(0, 255)),
-						G = Convert.ToByte(randy.Next(0, 255)),
-						B = Convert.ToByte(randy.Next(0, 255)),
-					}
+					Color = new Color() { A = 255, R = Convert.ToByte(randy.Next(0, 255)), G = Convert.ToByte(randy.Next(0, 255)), B = Convert.ToByte(randy.Next(0, 255)), }
 				};
 			}
 			else
 			{
 				// interp to new selected hex
-				KeyValuePair<Tuple<int, int>, Hex> destination = (KeyValuePair<Tuple<int, int>, Hex>)me.Tag;
+				KeyValuePair<Tuple<int, int>, BTHex> destination = (KeyValuePair<Tuple<int, int>, BTHex>)me.Tag;
 
 				// return distance and all hexes underneath 
-				CreateLoS(destination);
+				CreateLoS(FirstHex.Value.Value, destination.Value);
 
 				// Set first hex back to null
 				FirstHex = null;
@@ -141,134 +120,48 @@ namespace Hexagons_Are_Bestagons
 			// set all polys back to black 
 			foreach (var item in polys)
 			{
-				item.Value.Fill = new SolidColorBrush()
-				{
-					Color = new Color()
-					{
-						A = 255,
-						R = 0,
-						G = 0,
-						B = 0
-					}
-				};
-				item.Value.Stroke = new SolidColorBrush()
-				{
-					Color = new Color()
-					{
-						A = 255,
-						R = 255,
-						G = 255,
-						B = 255,
-					}
-				};
+				var tag = (KeyValuePair<Tuple<int, int>, BTHex>)item.Value.Tag;
+				item.Value.Fill = new SolidColorBrush() { Color = ((tag.Value.Map.y + tag.Value.Map.x) % 2 == 0) ? new Color() { A = 255, R = 100, G = 100, B = 100 } : new Color() { A = 255, R = 0, G = 0, B = 0 } };
+				item.Value.Stroke = new SolidColorBrush() { Color = new Color() { A = 255, R = 255, G = 255, B = 255, } };
 			}
 		}
 
-		private void CreateLoS(KeyValuePair<Tuple<int, int>, Hex> destination)
+		private void CreateLoS(BTHex start, BTHex destination)
 		{
-			var dist = Solver.HexDistance(FirstHex.Value.Value, destination.Value);
-			var hexes = Solver.HexesCrossed(FirstHex.Value.Value, destination.Value);
-			var hexesPrime = Solver.HexesCrossedPrime(FirstHex.Value.Value, destination.Value, 25);
+			var dist = Solver.HexDistance(start.Hexagon, destination.Hexagon);
+			var hexes = Solver.HexesCrossed(start.Hexagon, destination.Hexagon);
+			var hexesPrime = Solver.HexesCrossedPrime(start.Hexagon, destination.Hexagon, 10);
 			var diff = hexesPrime.Where(x => !hexes.Contains(x)).ToList();
-			var dictHexs = Solver.HexagonsAsHexsPrime.Where(x => hexes.Contains(x.Key)).ToList();
-			var dictDiffHexs = Solver.HexagonsAsHexsPrime.Where(x => diff.Contains(x.Key)).ToList();
+			var dictHexs = Solver.TTIByHexes.Where(x => hexes.Contains(x.Key)).ToList();
+			var dictDiffHexs = Solver.TTIByHexes.Where(x => diff.Contains(x.Key)).ToList();
 			foreach (var item in dictHexs)
 			{
-				polys[item.Value].Fill = new SolidColorBrush()
-				{
-					Color = new Color()
-					{
-						A = 255,
-						R = 255,
-						G = 255,
-						B = 255,
-					}
-				};
-				polys[item.Value].Stroke = new SolidColorBrush()
-				{
-					Color = new Color()
-					{
-						A = 255,
-						R = 0,
-						G = 0,
-						B = 0
-					}
-				};
+				polys[item.Value].Fill = new SolidColorBrush() { Color = new Color() { A = 255, R = 255, G = 255, B = 255, } };
+				polys[item.Value].Stroke = new SolidColorBrush() { Color = new Color() { A = 255, R = 0, G = 0, B = 0 } };
 			}
 			foreach (var item in dictDiffHexs)
 			{
-				polys[item.Value].Fill = new SolidColorBrush()
-				{
-					Color = new Color()
-					{
-						A = 255,
-						R = 115,
-						G = 115,
-						B = 115,
-					}
-				};
-				polys[item.Value].Stroke = new SolidColorBrush()
-				{
-					Color = new Color()
-					{
-						A = 255,
-						R = 0,
-						G = 0,
-						B = 0
-					}
-				};
+				polys[item.Value].Fill = new SolidColorBrush() { Color = new Color() { A = 255, R = 195, G = 195, B = 255, } };
+				polys[item.Value].Stroke = new SolidColorBrush() { Color = new Color() { A = 255, R = 0, G = 0, B = 0 } };
 			}
 			// Add a line 
 			Random randy = new Random();
-			var p1 = Solver.ourLayout.HexToPixel(FirstHex.Value.Value);
-			var p2 = Solver.ourLayout.HexToPixel(destination.Value);
-			LOS = new Line()
-			{
-				Stroke = new SolidColorBrush()
-				{
-					Color = new Color()
-					{
-						A = 255,
-						R = 255,
-						G = 255,
-						B = 255,
-					}
-				},
-				StrokeThickness = 2,
-
-				X1 = p1.x,
-				Y1 = p1.y,
-				X2 = p2.x,
-				Y2 = p2.y,
-			};
-			LOS2 = new Line()
-			{
-				Stroke = new SolidColorBrush()
-				{
-					Color = new Color()
-					{
-						A = 255,
-						R = 0,
-						G = 0,
-						B = 0,
-					}
-				},
-				StrokeThickness = 1,
-
-				X1 = p1.x,
-				Y1 = p1.y,
-				X2 = p2.x,
-				Y2 = p2.y,
-			};
+			var p1 = Solver.ourLayout.HexToPixel(start.Hexagon);
+			var p2 = Solver.ourLayout.HexToPixel(destination.Hexagon);
+			LOS = new Line() { Stroke = new SolidColorBrush() { Color = new Color() { A = 255, R = 255, G = 255, B = 255, } }, StrokeThickness = 2, X1 = p1.x, Y1 = p1.y, X2 = p2.x, Y2 = p2.y, };
+			LOS2 = new Line() { Stroke = new SolidColorBrush() { Color = new Color() { A = 255, R = 0, G = 0, B = 0, } }, StrokeThickness = 1, X1 = p1.x, Y1 = p1.y, X2 = p2.x, Y2 = p2.y, };
 			MainGrid.Children.Add(LOS);
 			MainGrid.Children.Add(LOS2);
 
 			// Set info text 
-			var infotext = $"Distance {Solver.HexDistance(FirstHex.Value.Value, destination.Value)}";
-			infotext += $"\r\n {Solver.HexagonsAsBTHexs[FirstHex.Value.Key]}";
+			FirstHexInput.Text = start.ToShortString();
+			SecondHexInput.Text = destination.ToShortString();
+			var infotext = $"Distance {Solver.HexDistance(start.Hexagon, destination.Hexagon)}";
+			//infotext += $"\r\n {Solver.HexagonsAsBTHexs[FirstHex.Value.Key]}";
 			foreach (var item in dictHexs)
 			{
-				infotext += $"\r\n{Solver.HexagonsAsBTHexs[item.Value]}";
+				//infotext += $"\r\n{Solver.BTHexesByTII[item.Value]} {item.Value}";
+				infotext += $"\r\n{Solver.BTHexesByTII[item.Value].ToShortString()}";
 			}
 
 			InfoText.Text = infotext;
@@ -292,10 +185,21 @@ namespace Hexagons_Are_Bestagons
 
 		private void ResizePolys()
 		{
-			foreach (var hexagon in Solver.HexagonsAsHexs)
+			foreach (var hexagon in Solver.HexesByTII)
 			{
 				polys[hexagon.Key].Points = Helpers.HexPointsToPointsColl(Solver.ourLayout.PolygonCorners(hexagon.Value));
 			}
+		}
+
+		private void Submit(object sender, RoutedEventArgs e)
+		{
+			// try to find hexes via text
+			Tuple<int, int> key = Solver.ShortStringToTII[FirstHexInput.Text];
+			var hex1 = Solver.BTHexesByTII[key];
+			var hex2 = Solver.BTHexesByTII[Solver.ShortStringToTII[SecondHexInput.Text]];
+
+			Reset();
+			CreateLoS(hex1, hex2);
 		}
 	}
 	public static class Helpers

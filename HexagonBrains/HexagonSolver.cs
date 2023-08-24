@@ -18,10 +18,11 @@ namespace HexagonBrains
 		public int Height { get; }
 		private readonly Point mapSize;
 		private readonly Point mapComposition;
-		public Dictionary<Tuple<int, int>, OffsetCoord> HexagonsAsOffset { get; }
-		public Dictionary<Tuple<int, int>, Hex> HexagonsAsHexs { get; }
-		public Dictionary<Tuple<int, int>, BTHex> HexagonsAsBTHexs { get; }
-		public Dictionary<Hex, Tuple<int, int>> HexagonsAsHexsPrime { get; }
+		public Dictionary<Tuple<int, int>, OffsetCoord> OffsetsByTII { get; }
+		public Dictionary<Tuple<int, int>, Hex> HexesByTII { get; }
+		public Dictionary<Tuple<int, int>, BTHex> BTHexesByTII { get; }
+		public Dictionary<string, Tuple<int, int>> ShortStringToTII { get; }
+		public Dictionary<Hex, Tuple<int, int>> TTIByHexes { get; }
 		public Layout ourLayout { get; private set; }
 
 		// Battletech uses an odd-q 
@@ -38,21 +39,24 @@ namespace HexagonBrains
 			Width = width;
 			Height = height;
 			Size = size;
-			HexagonsAsOffset = new Dictionary<Tuple<int, int>, OffsetCoord>();
-			HexagonsAsHexs = new Dictionary<Tuple<int, int>, Hex>();
-			HexagonsAsBTHexs = new Dictionary<Tuple<int, int>, BTHex>();
-			HexagonsAsHexsPrime = new Dictionary<Hex, Tuple<int, int>>();
+			OffsetsByTII = new();
+			HexesByTII = new();
+			BTHexesByTII = new();
+			TTIByHexes = new();
+			ShortStringToTII = new();
 
 			for (var x = 0; x < width; x++)
 				for (var y = 0; y < height; y++)
-					HexagonsAsOffset.TryAdd(new Tuple<int, int>(x, y), new OffsetCoord(x, y));
+					OffsetsByTII.TryAdd(new Tuple<int, int>(x, y), new OffsetCoord(x, y));
 
-			foreach (var key in HexagonsAsOffset.Keys)
+			foreach (var key in OffsetsByTII.Keys)
 			{
-				Hex hex = OffsetCoord.QoffsetToCube(-1, HexagonsAsOffset[key]);
-				HexagonsAsHexs.Add(key, hex);
-				HexagonsAsBTHexs.Add(key, new BTHex(key, mapSize, hex));
-				HexagonsAsHexsPrime.Add(hex, key);
+				Hex hex = OffsetCoord.QoffsetToCube(-1, OffsetsByTII[key]);
+				HexesByTII.Add(key, hex);
+				BTHex bt = new BTHex(key, mapSize, hex);
+				BTHexesByTII.Add(key, bt);
+				ShortStringToTII.Add(bt.ToShortString(), key);
+				TTIByHexes.Add(hex, key);
 			}
 			ourLayout = new Layout(orientation: Layout.flat, size: new Point(size, size), origin: new Point(size, size * (Math.Sqrt(3) / 2)));
 		}
@@ -90,19 +94,20 @@ namespace HexagonBrains
 			// Shift because physical maps start 0101 
 			int x = offsetKey.Item1;
 			int y = offsetKey.Item2;
-			x++; 
-			y++;
 			// Find the maps 
-			Map = new Point((int)(x / mapSize.x) + 1, (int)(y / mapSize.y) + 1);
+			Map = new Point((int)(x / (mapSize.x)) + 1, (int)(y / (mapSize.y)) + 1);
 			// Find the map coordinate 
-			// If X is on the mapsize border its on a blank hex which we will say belongs to the map on which that would col 18
-			Coordinates = new Point(x % (mapSize.x + 1) , y % (mapSize.y + 1));
+			// If X is on the mapsize border its on a blank hex which we will say belongs to the map on which that would col 18 
+			Coordinates = new Point((x % mapSize.x) + 1, (y % mapSize.y) + 1);
 			Hexagon = hex;
 		}
 		public override string ToString()
 		{
-			return $"Map:({Map.x},{Map.y}) Hex:{{{((Coordinates.x == MapSize.x)? "Blank " + Coordinates.x.ToString() : Coordinates.x)},{Coordinates.y}}}";
+			return $"Map:({Map.x},{Map.y}) Hex:{{{(int)Coordinates.x:D2}{(int)Coordinates.y:D2}}}";
+		}
+		public string ToShortString()
+		{
+			return $"({Map.x},{Map.y}){(int)Coordinates.x:D2}{(int)Coordinates.y:D2}";
 		}
 	}
-
 }
