@@ -25,12 +25,11 @@ namespace Hexagons_Are_Bestagons
 		{
 
 			InitializeComponent();
-			DataContext = this;
 			// Prompt for size and then init an array of hexagons 
 			int mapsX = 5;
 			int mapsY = 5;
 
-			Solver = HexagonSolver.SolverFromBattletechMaps(mapsX, mapsY, 15, 17);
+			Solver = HexagonSolver.SolverFromBattletechMaps(mapsX, mapsY);
 			//Solver = new HexagonSolver(cols, rows, size);
 			polys = new Dictionary<Tuple<int, int>, Polygon>();
 
