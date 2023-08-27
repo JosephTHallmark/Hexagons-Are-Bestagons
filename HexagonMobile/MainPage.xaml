@@ -1,39 +1,40 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="HexagonMobile.MainPage">
+<ContentPage
+    x:Class="HexagonMobile.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <ScrollView x:Name="scrollView">
         <VerticalStackLayout
-            Spacing="25"
+            x:Name="MainContent"
             Padding="30,0"
-            VerticalOptions="Center"
-            x:Name="MainContent">
-
-            <VerticalStackLayout
-                x:Name="VSL1">
-                <Label
-                    Text="Welcome "
-                    FontSize="18"
-                    HorizontalOptions="Start" />
-                <Button
-                    x:Name="SubmitBtn"
-                    Text="Submit"
-                    Clicked="Submit"
-                    HorizontalOptions="End"/>
-                <Entry Placeholder="First Text Box (1,1)0101"
-                   x:Name="FirstHexInput"
-                       Keyboard="Default"/>
-                <Entry Placeholder="Second Text Box (1,1)1517"
-                   x:Name="SecondHexInput"
-                       Keyboard="Default"/>
-
+            Spacing="25"
+            VerticalOptions="Center">
+            <VerticalStackLayout x:Name="VSL1" VerticalOptions="Start">
+                <HorizontalStackLayout VerticalOptions="Start">
+                    <Label
+                        FontSize="18"
+                        HorizontalOptions="Start"
+                        Text="Hello" />
+                    <Button
+                        x:Name="SubmitBtn"
+                        Clicked="Submit"
+                        HorizontalOptions="End"
+                        Text="Submit" />
+                </HorizontalStackLayout>
+                <Entry
+                    x:Name="FirstHexInput"
+                    Keyboard="Default"
+                    Placeholder="First Text Box (1,1)0101"
+                    Text="(1,1)0106" />
+                <Entry
+                    x:Name="SecondHexInput"
+                    Keyboard="Default"
+                    Placeholder="Second Text Box (1,1)1517"
+                    Text="(1,10)0506" />
             </VerticalStackLayout>
 
-            <VerticalStackLayout
-                x:Name="VSL2">
-                
-            </VerticalStackLayout>
+            <VerticalStackLayout x:Name="VSL2" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

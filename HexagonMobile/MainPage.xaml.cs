@@ -9,25 +9,22 @@ namespace HexagonMobile
 		public MainPage()
 		{
 			InitializeComponent();
-			var view = this;
 
-			int mapsX = 1;
-			int mapsY = 1;
-
-			Solver = HexagonSolver.SolverFromBattletechMaps(mapsX, mapsY, 15, 17);
-
-			//foreach (var item in Solver.ShortStringToTII)
-			//{
-			//	VSL2.Add(new Label()
-			//	{
-			//		Text = item.Key.ToString(),
-			//	});
-			//}
+			//Solver = HexagonSolver.SolverFromBattletechMaps(Convert.ToInt32(mapSizeX.Text), Convert.ToInt32(mapSizeY.Text), 15, 17);
 		}
 
 		private void Submit(object sender, EventArgs e)
 		{
+			//Solver = HexagonSolver.SolverFromBattletechMaps(Convert.ToInt32(mapSizeX.Text), Convert.ToInt32(mapSizeY.Text), 15, 17);
+			// Parse x and y from both inputs 
+			var firsthex = FirstHexInput.Text.Substring(1, FirstHexInput.Text.IndexOf(')') - 1).Split(',');
+			var secondhex = SecondHexInput.Text.Substring(1, SecondHexInput.Text.IndexOf(')') - 1).Split(',');
+			var xm = Math.Max(Convert.ToInt32(firsthex[0]), Convert.ToInt32(secondhex[0]));
+			var ym = Math.Max(Convert.ToInt32(firsthex[1]), Convert.ToInt32(secondhex[1]));
+			Solver = HexagonSolver.SolverFromBattletechMaps(xm, ym);
+
 			// Try to find hexes via text 
+			VSL2.Clear();
 			try
 			{
 				BTHex hex1 = null;
@@ -59,17 +56,25 @@ namespace HexagonMobile
 				VSL2.Add(new Label() { Text = $"Distance: {dist}" });
 
 				var hexes = Solver.HexesCrossed(hex1.Hexagon, hex2.Hexagon);
-				var hexesPrime = Solver.HexesCrossedPrime(hex1.Hexagon, hex2.Hexagon, 10);
+				var hexesPrime = Solver.HexesCrossedPrime(hex1.Hexagon, hex2.Hexagon, 1);
 
 				var diff = hexesPrime.Where(x => !hexes.Contains(x)).ToList();
 				var dictHexs = Solver.TTIByHexes.Where(x => hexes.Contains(x.Key)).ToList();
+				var dictHexesPrime = Solver.TTIByHexes.Where(x => hexesPrime.Contains(x.Key)).ToList();
 				var dictDiffHexs = Solver.TTIByHexes.Where(x => diff.Contains(x.Key)).ToList();
 
-				foreach (var item in dictHexs)
+				VSL2.Add(new Label()
+				{
+					Text = $"{Solver.BTHexesByTII[dictHexs.First().Value].ToShortString()} your hex\r\n---------------------------------",
+				});
+				dictHexs.RemoveAt(0);
+				dictHexesPrime.RemoveAt(0);
+
+				for (int i = 0; i < dictHexs.Count; i++)
 				{
 					VSL2.Add(new Label()
 					{
-						Text = $"{Solver.BTHexesByTII[item.Value].ToShortString()}",
+						Text = $"{i + 1:d2} {Solver.BTHexesByTII[dictHexs[i].Value].ToShortString()} - {(dictHexs.Contains(dictHexesPrime[i]) ? "" : Solver.BTHexesByTII[dictHexesPrime[i].Value].ToShortString())}",
 					});
 				}
 
@@ -77,6 +82,11 @@ namespace HexagonMobile
 			catch (Exception)
 			{
 			}
+		}
+
+		private void mapSizeChange(object sender, TextChangedEventArgs e)
+		{
+
 		}
 	}
 }
