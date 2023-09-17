@@ -109,6 +109,10 @@ namespace HexagonBrains.RedblobHexs
 			return !Equals(a, b);
 		}
 
+		public override string ToString()
+		{
+			return $"{q},{r},{s}";
+		}
 
 	}
 
@@ -246,6 +250,11 @@ namespace HexagonBrains.RedblobHexs
 				throw new ArgumentException("offset must be EVEN (+1) or ODD (-1)");
 			}
 			return new Hex(q, r, s);
+		}
+
+		public override string ToString()
+		{
+			return $"{col},{row}";
 		}
 
 	}

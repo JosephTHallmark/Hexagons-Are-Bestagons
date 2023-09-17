@@ -29,7 +29,7 @@ namespace Hexagons_Are_Bestagons
 			int mapsX = 5;
 			int mapsY = 5;
 
-			Solver = HexagonSolver.SolverFromBattletechMaps(mapsX, mapsY);
+			Solver = HexagonSolver.SolverFromBattleTechMaps(mapsX, mapsY);
 			//Solver = new HexagonSolver(cols, rows, size);
 			polys = new Dictionary<Tuple<int, int>, Polygon>();
 

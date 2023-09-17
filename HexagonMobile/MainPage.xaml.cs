@@ -14,19 +14,20 @@ namespace HexagonMobile
 		}
 
 		private void Submit(object sender, EventArgs e)
-		{
-			//Solver = HexagonSolver.SolverFromBattletechMaps(Convert.ToInt32(mapSizeX.Text), Convert.ToInt32(mapSizeY.Text), 15, 17);
-			// Parse x and y from both inputs 
-			var firsthex = FirstHexInput.Text.Substring(1, FirstHexInput.Text.IndexOf(')') - 1).Split(',');
-			var secondhex = SecondHexInput.Text.Substring(1, SecondHexInput.Text.IndexOf(')') - 1).Split(',');
-			var xm = Math.Max(Convert.ToInt32(firsthex[0]), Convert.ToInt32(secondhex[0]));
-			var ym = Math.Max(Convert.ToInt32(firsthex[1]), Convert.ToInt32(secondhex[1]));
-			Solver = HexagonSolver.SolverFromBattletechMaps(xm, ym);
-
-			// Try to find hexes via text 
-			VSL2.Clear();
+		{			
 			try
 			{
+				//Solver = HexagonSolver.SolverFromBattletechMaps(Convert.ToInt32(mapSizeX.Text), Convert.ToInt32(mapSizeY.Text), 15, 17);
+				// Parse x and y from both inputs 
+				var firsthex = FirstHexInput.Text.Substring(1, FirstHexInput.Text.IndexOf(')') - 1).Split(',');
+				var secondhex = SecondHexInput.Text.Substring(1, SecondHexInput.Text.IndexOf(')') - 1).Split(',');
+				var xm = Math.Max(Convert.ToInt32(firsthex[0]), Convert.ToInt32(secondhex[0]));
+				var ym = Math.Max(Convert.ToInt32(firsthex[1]), Convert.ToInt32(secondhex[1]));
+				Solver = HexagonSolver.SolverFromBattleTechMaps(xm, ym);
+
+				// Try to find hexes via text 
+				VSL2.Clear();
+
 				BTHex hex1 = null;
 				BTHex hex2 = null;
 

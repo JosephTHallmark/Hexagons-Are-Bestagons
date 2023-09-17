@@ -26,14 +26,16 @@ namespace HexagonBrains
 		public Layout ourLayout { get; private set; }
 
 		// Battletech uses an odd-q 
-		public static HexagonSolver SolverFromBattletechMaps(int x, int y, int mapSizeX = 15, int mapSizeY = 17)
+		public static HexagonSolver SolverFromBattleTechMaps(int x, int y, int mapSizeX = 16, int mapSizeY = 17)
 		{
-			int width = (x > 1) ? (mapSizeX + 1) * x : mapSizeX;
+			int width = x * mapSizeX;
 			int height = y * mapSizeY;
-			return new HexagonSolver(new Point((x > 1) ? mapSizeX + 1 : mapSizeX, mapSizeY), new Point(x, y), width, height);
+			return new HexagonSolver(new Point(mapSizeX, mapSizeY), new Point(x, y), width, height);
 		}
 		public HexagonSolver(Point MapSize, Point mapComp, int width = 15, int height = 17, int size = 25)
 		{
+
+
 			mapSize = MapSize;
 			mapComposition = mapComp;
 			Width = width;
@@ -45,18 +47,33 @@ namespace HexagonBrains
 			TTIByHexes = new();
 			ShortStringToTII = new();
 
+			var tx = -1;
+			var ty = -1;
+
 			for (var x = 0; x < width; x++)
 				for (var y = 0; y < height; y++)
+				{
 					OffsetsByTII.TryAdd(new Tuple<int, int>(x, y), new OffsetCoord(x, y));
-
-			foreach (var key in OffsetsByTII.Keys)
+					tx = x;
+					ty = y;
+				}
+			try
 			{
-				Hex hex = OffsetCoord.QoffsetToCube(-1, OffsetsByTII[key]);
-				HexesByTII.Add(key, hex);
-				BTHex bt = new BTHex(key, mapSize, hex);
-				BTHexesByTII.Add(key, bt);
-				ShortStringToTII.Add(bt.ToShortString(), key);
-				TTIByHexes.Add(hex, key);
+
+				foreach (var key in OffsetsByTII.Keys)
+				{
+					Hex hex = OffsetCoord.QoffsetToCube(-1, OffsetsByTII[key]);
+					HexesByTII.Add(key, hex);
+					BTHex bt = new BTHex(key, mapSize, hex);
+					BTHexesByTII.Add(key, bt);
+					ShortStringToTII.Add(bt.ToShortString(), key);
+					TTIByHexes.Add(hex, key);
+				}
+			}
+			catch (Exception)
+			{
+
+				throw;
 			}
 			ourLayout = new Layout(orientation: Layout.flat, size: new Point(size, size), origin: new Point(size, size * (Math.Sqrt(3) / 2)));
 		}
@@ -95,7 +112,7 @@ namespace HexagonBrains
 			int x = offsetKey.Item1;
 			int y = offsetKey.Item2;
 			// Find the maps 
-			Map = new Point((int)(x / (mapSize.x)) + 1, (int)(y / (mapSize.y)) + 1);
+			Map = new Point((int)(x / (mapSize.x + 1)) + 1, (int)(y / (mapSize.y + 1)) + 1);
 			// Find the map coordinate 
 			// If X is on the mapsize border its on a blank hex which we will say belongs to the map on which that would col 18 
 			Coordinates = new Point((x % mapSize.x) + 1, (y % mapSize.y) + 1);
@@ -103,7 +120,7 @@ namespace HexagonBrains
 		}
 		public override string ToString()
 		{
-			return $"Map:({Map.x},{Map.y}) Hex:{{{(int)Coordinates.x:D2}{(int)Coordinates.y:D2}}}";
+			return $"Map:({Map.x},{Map.y}) BTHex:{(int)Coordinates.x:D2}{(int)Coordinates.y:D2} Hex {Hexagon}";
 		}
 		public string ToShortString()
 		{
