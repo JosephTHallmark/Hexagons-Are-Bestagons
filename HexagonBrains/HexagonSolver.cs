@@ -70,9 +70,9 @@ namespace HexagonBrains
 					TTIByHexes.Add(hex, key);
 				}
 			}
-			catch (Exception)
+			catch (Exception exp)
 			{
-
+				Console.WriteLine(exp.Message);
 				throw;
 			}
 			ourLayout = new Layout(orientation: Layout.flat, size: new Point(size, size), origin: new Point(size, size * (Math.Sqrt(3) / 2)));
@@ -109,13 +109,13 @@ namespace HexagonBrains
 		{
 			MapSize = mapSize;
 			// Shift because physical maps start 0101 
-			int x = offsetKey.Item1;
-			int y = offsetKey.Item2;
 			// Find the maps 
-			Map = new Point((int)(x / (mapSize.x + 1)) + 1, (int)(y / (mapSize.y + 1)) + 1);
+			Map = new Point(offsetKey.Item1, offsetKey.Item2);
 			// Find the map coordinate 
 			// If X is on the mapsize border its on a blank hex which we will say belongs to the map on which that would col 18 
-			Coordinates = new Point((x % mapSize.x) + 1, (y % mapSize.y) + 1);
+			double x = Map.x % mapSize.x;
+			double y = Map.y % mapSize.y;
+			Coordinates = new Point(x + 1, y + 1);
 			Hexagon = hex;
 		}
 		public override string ToString()

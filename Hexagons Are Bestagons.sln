@@ -7,7 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hexagons Are Bestagons", "H
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HexagonBrains", "HexagonBrains\HexagonBrains.csproj", "{9C007682-3097-4413-99AF-AAB6B1A69D4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexagonMobile", "HexagonMobile\HexagonMobile.csproj", "{AEA5005B-E6D4-43B6-A6CB-0D1FD61AE639}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HexagonMobile", "HexagonMobile\HexagonMobile.csproj", "{AEA5005B-E6D4-43B6-A6CB-0D1FD61AE639}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A52EFCD3-4197-41FA-9DAA-77304BD3D4E7}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

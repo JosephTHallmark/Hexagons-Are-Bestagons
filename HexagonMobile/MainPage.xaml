@@ -32,7 +32,7 @@
                     x:Name="SecondHexInput"
                     Keyboard="Default"
                     Placeholder="Second Text Box (1,1)1517"
-                    Text="(1,2)1309"
+                    Text="(1,1)1309"
                     />
             </VerticalStackLayout>
 
