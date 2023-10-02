@@ -61,18 +61,31 @@ namespace HexagonMobile
 				var dictHexs = Solver.TTIByHexes.Where(x => hexes.Contains(x.Key)).ToList();
 				var dictHexesPrime = Solver.TTIByHexes.Where(x => hexesPrime.Contains(x.Key)).ToList();
 
-				VSL2.Add(new Label()
+				List<BTHex> bTHexes = new List<BTHex>();
+				foreach (var item in dictHexs)
 				{
-					Text = $"{Solver.BTHexesByTII[dictHexs.First().Value].ToShortString()} your hex\r\n---------------------------------",
-				});
-				dictHexs.RemoveAt(0);
-				dictHexesPrime.RemoveAt(0);
+					bTHexes.Add(Solver.BTHexesByTII[item.Value]);
+				}
+				bTHexes = bTHexes.OrderBy(x => x.Coordinates.x).ToList();
+				bTHexes = bTHexes.OrderBy(x => x.Coordinates.y).ToList();
+				bTHexes = bTHexes.OrderBy(x => x.Map.x).ToList();
+				bTHexes = bTHexes.OrderBy(x => x.Map.y).ToList();
+
+				List<BTHex> bTHexesPrime = new List<BTHex>();
+				foreach (var item in dictHexesPrime)
+				{
+					bTHexesPrime.Add(Solver.BTHexesByTII[item.Value]);
+				}
+				bTHexesPrime = bTHexesPrime.OrderBy(x => x.Coordinates.x).ToList();
+				bTHexesPrime = bTHexesPrime.OrderBy(x => x.Coordinates.y).ToList();
+				bTHexesPrime = bTHexesPrime.OrderBy(x => x.Map.x).ToList();
+				bTHexesPrime = bTHexesPrime.OrderBy(x => x.Map.y).ToList();
 
 				for (int i = 0; i < dictHexs.Count; i++)
 				{
 					VSL2.Add(new Label()
 					{
-						Text = $"{i + 1:d2} {Solver.BTHexesByTII[dictHexs[i].Value].ToShortString()} - {(dictHexs.Contains(dictHexesPrime[i]) ? "" : Solver.BTHexesByTII[dictHexesPrime[i].Value].ToShortString())}",
+						Text = $"{i + 1:d2} {bTHexes[i].ToShortString()} - {(bTHexes.Contains(bTHexesPrime[i]) ? "" : bTHexesPrime[i].ToShortString())}",
 					});
 				}
 
