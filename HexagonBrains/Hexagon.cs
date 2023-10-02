@@ -111,7 +111,7 @@ namespace HexagonBrains.RedblobHexs
 
 		public override string ToString()
 		{
-			return $"{q},{r},{s}";
+			return $"{q},{r},{s} + {OffsetCoord.QoffsetFromCube(-1, this)}";
 		}
 
 	}

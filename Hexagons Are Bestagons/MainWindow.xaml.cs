@@ -26,8 +26,8 @@ namespace Hexagons_Are_Bestagons
 
 			InitializeComponent();
 			// Prompt for size and then init an array of hexagons 
-			int mapsX = 5;
-			int mapsY = 5;
+			int mapsX = 2;
+			int mapsY = 2;
 
 			Solver = HexagonSolver.SolverFromBattleTechMaps(mapsX, mapsY);
 			//Solver = new HexagonSolver(cols, rows, size);

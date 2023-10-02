@@ -50,19 +50,16 @@ namespace HexagonMobile
 					SecondHexInput.Placeholder = "Not a hex (1,1)0101";
 				}
 
-
-
-				if (hex1 == null || hex2 == null) throw new Exception();
+				if (hex1 == null || hex2 == null) 
+					throw new Exception();
 				var dist = Solver.HexDistance(hex1.Hexagon, hex2.Hexagon);
 				VSL2.Add(new Label() { Text = $"Distance: {dist}" });
 
 				var hexes = Solver.HexesCrossed(hex1.Hexagon, hex2.Hexagon);
 				var hexesPrime = Solver.HexesCrossedPrime(hex1.Hexagon, hex2.Hexagon, 1);
 
-				var diff = hexesPrime.Where(x => !hexes.Contains(x)).ToList();
 				var dictHexs = Solver.TTIByHexes.Where(x => hexes.Contains(x.Key)).ToList();
 				var dictHexesPrime = Solver.TTIByHexes.Where(x => hexesPrime.Contains(x.Key)).ToList();
-				var dictDiffHexs = Solver.TTIByHexes.Where(x => diff.Contains(x.Key)).ToList();
 
 				VSL2.Add(new Label()
 				{

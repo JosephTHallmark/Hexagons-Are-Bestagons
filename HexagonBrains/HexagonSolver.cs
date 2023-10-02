@@ -47,15 +47,10 @@ namespace HexagonBrains
 			TTIByHexes = new();
 			ShortStringToTII = new();
 
-			var tx = -1;
-			var ty = -1;
-
 			for (var x = 0; x < width; x++)
 				for (var y = 0; y < height; y++)
 				{
 					OffsetsByTII.TryAdd(new Tuple<int, int>(x, y), new OffsetCoord(x, y));
-					tx = x;
-					ty = y;
 				}
 			try
 			{
@@ -108,15 +103,16 @@ namespace HexagonBrains
 		public BTHex(Tuple<int, int> offsetKey, Point mapSize, Hex hex)
 		{
 			MapSize = mapSize;
-			// Shift because physical maps start 0101 
-			// Find the maps 
-			Map = new Point(offsetKey.Item1, offsetKey.Item2);
-			// Find the map coordinate 
-			// If X is on the mapsize border its on a blank hex which we will say belongs to the map on which that would col 18 
-			double x = Map.x % mapSize.x;
-			double y = Map.y % mapSize.y;
-			Coordinates = new Point(x + 1, y + 1);
+			double x = (offsetKey.Item1 + 1) % mapSize.x;
+			double y = (offsetKey.Item2 + 1) % mapSize.y;
+			if (x == 0) x = MapSize.x;
+			if (y == 0) y = MapSize.y;
+			Coordinates = new Point(x, y);
+			int x1 = (int)(offsetKey.Item1 / MapSize.x);
+			int y1 = (int)(offsetKey.Item2 / MapSize.y);
+			Map = new Point(x1 + 1, y1 + 1);
 			Hexagon = hex;
+			var ss = ToShortString();
 		}
 		public override string ToString()
 		{
