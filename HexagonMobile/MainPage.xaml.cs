@@ -1,4 +1,5 @@
 ﻿using HexagonBrains;
+using HexagonBrains.RedblobHexs;
 
 namespace HexagonMobile
 {
@@ -14,7 +15,7 @@ namespace HexagonMobile
 		}
 
 		private void Submit(object sender, EventArgs e)
-		{			
+		{
 			try
 			{
 				//Solver = HexagonSolver.SolverFromBattletechMaps(Convert.ToInt32(mapSizeX.Text), Convert.ToInt32(mapSizeY.Text), 15, 17);
@@ -50,7 +51,7 @@ namespace HexagonMobile
 					SecondHexInput.Placeholder = "Not a hex (1,1)0101";
 				}
 
-				if (hex1 == null || hex2 == null) 
+				if (hex1 == null || hex2 == null)
 					throw new Exception();
 				var dist = Solver.HexDistance(hex1.Hexagon, hex2.Hexagon);
 				VSL2.Add(new Label() { Text = $"Distance: {dist}" });
@@ -62,30 +63,34 @@ namespace HexagonMobile
 				var dictHexesPrime = Solver.TTIByHexes.Where(x => hexesPrime.Contains(x.Key)).ToList();
 
 				List<BTHex> bTHexes = new List<BTHex>();
+				List<Tuple<KeyValuePair<Hex, Tuple<int, int>>, int>> distanceTo = new List<Tuple<KeyValuePair<Hex, Tuple<int, int>>, int>>();
 				foreach (var item in dictHexs)
 				{
-					bTHexes.Add(Solver.BTHexesByTII[item.Value]);
+					distanceTo.Add(new Tuple<KeyValuePair<Hex, Tuple<int, int>>, int>(item, Solver.HexDistance(hex1.Hexagon, item.Key)));
 				}
-				bTHexes = bTHexes.OrderBy(x => x.Coordinates.x).ToList();
-				bTHexes = bTHexes.OrderBy(x => x.Coordinates.y).ToList();
-				bTHexes = bTHexes.OrderBy(x => x.Map.x).ToList();
-				bTHexes = bTHexes.OrderBy(x => x.Map.y).ToList();
+				distanceTo = distanceTo.OrderBy(x => x.Item2).ToList();
+				foreach (var item in distanceTo)
+				{
+					bTHexes.Add(Solver.BTHexesByTII[item.Item1.Value]);
+				}
 
 				List<BTHex> bTHexesPrime = new List<BTHex>();
+				List<Tuple<KeyValuePair<Hex, Tuple<int, int>>, int>> distanceToPrime = new List<Tuple<KeyValuePair<Hex, Tuple<int, int>>, int>>();
 				foreach (var item in dictHexesPrime)
 				{
-					bTHexesPrime.Add(Solver.BTHexesByTII[item.Value]);
+					distanceToPrime.Add(new Tuple<KeyValuePair<Hex, Tuple<int, int>>, int>(item, Solver.HexDistance(hex1.Hexagon, item.Key)));
 				}
-				bTHexesPrime = bTHexesPrime.OrderBy(x => x.Coordinates.x).ToList();
-				bTHexesPrime = bTHexesPrime.OrderBy(x => x.Coordinates.y).ToList();
-				bTHexesPrime = bTHexesPrime.OrderBy(x => x.Map.x).ToList();
-				bTHexesPrime = bTHexesPrime.OrderBy(x => x.Map.y).ToList();
+				distanceToPrime = distanceToPrime.OrderBy(x => x.Item2).ToList();
+				foreach (var item in distanceToPrime)
+				{
+					bTHexesPrime.Add(Solver.BTHexesByTII[item.Item1.Value]);
+				}
 
 				for (int i = 0; i < dictHexs.Count; i++)
 				{
 					VSL2.Add(new Label()
 					{
-						Text = $"{i + 1:d2} {bTHexes[i].ToShortString()} - {(bTHexes.Contains(bTHexesPrime[i]) ? "" : bTHexesPrime[i].ToShortString())}",
+						Text = $"{i + 1:d2} {bTHexes[i].ToShortString()} {(bTHexes.Contains(bTHexesPrime[i]) ? "" : "-" + bTHexesPrime[i].ToShortString())}",
 					});
 				}
 
