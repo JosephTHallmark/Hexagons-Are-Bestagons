@@ -90,7 +90,7 @@ namespace HexagonMobile
 				{
 					VSL2.Add(new Label()
 					{
-						Text = $"{i + 1:d2} {bTHexes[i].ToShortString()} {(bTHexes.Contains(bTHexesPrime[i]) ? "" : "-" + bTHexesPrime[i].ToShortString())}",
+						Text = $"{i:d2} {bTHexes[i].ToShortString()} {(bTHexes.Contains(bTHexesPrime[i]) ? "" : "-" + bTHexesPrime[i].ToShortString())}",
 					});
 				}
 
