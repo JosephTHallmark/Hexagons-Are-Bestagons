@@ -11,7 +11,10 @@
             Spacing="25"
             VerticalOptions="Center">
             <VerticalStackLayout x:Name="VSL1" VerticalOptions="Start">
-
+                <HorizontalStackLayout>
+                    <Entry x:Name="mapSizeX" Keyboard="Numeric" FontFamily="monospace" Text="16" />
+                    <Entry x:Name="mapSizeY" Keyboard="Numeric" FontFamily="monospace" Text="17" />
+                </HorizontalStackLayout>
                 <HorizontalStackLayout>
                     <Entry
                         x:Name="FHxm"

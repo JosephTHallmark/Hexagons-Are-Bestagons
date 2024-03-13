@@ -25,7 +25,7 @@ namespace HexagonMobile
 
 				var xm = Math.Max(Convert.ToInt32(FHxm.Text), Convert.ToInt32(SHxm.Text));
 				var ym = Math.Max(Convert.ToInt32(FHym.Text), Convert.ToInt32(SHym.Text));
-				Solver = HexagonSolver.SolverFromBattleTechMaps(xm, ym);
+				Solver = HexagonSolver.SolverFromBattleTechMaps(xm, ym, Convert.ToInt32(mapSizeX.Text), Convert.ToInt32(mapSizeY.Text));
 
 				// Try to find hexes via text 
 				VSL2.Clear();
