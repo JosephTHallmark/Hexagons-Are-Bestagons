@@ -20,10 +20,11 @@ namespace HexagonMobile
 			{
 				//Solver = HexagonSolver.SolverFromBattletechMaps(Convert.ToInt32(mapSizeX.Text), Convert.ToInt32(mapSizeY.Text), 15, 17);
 				// Parse x and y from both inputs 
-				var firsthex = FirstHexInput.Text.Substring(1, FirstHexInput.Text.IndexOf(')') - 1).Split(',');
-				var secondhex = SecondHexInput.Text.Substring(1, SecondHexInput.Text.IndexOf(')') - 1).Split(',');
-				var xm = Math.Max(Convert.ToInt32(firsthex[0]), Convert.ToInt32(secondhex[0]));
-				var ym = Math.Max(Convert.ToInt32(firsthex[1]), Convert.ToInt32(secondhex[1]));
+				var FirstHexString = $"({FHxm.Text},{FHym.Text}){FHcord.Text}";
+				var SecondHexString = $"({SHxm.Text},{SHym.Text}){SHcord.Text}";
+
+				var xm = Math.Max(Convert.ToInt32(FHxm.Text), Convert.ToInt32(SHxm.Text));
+				var ym = Math.Max(Convert.ToInt32(FHym.Text), Convert.ToInt32(SHym.Text));
 				Solver = HexagonSolver.SolverFromBattleTechMaps(xm, ym);
 
 				// Try to find hexes via text 
@@ -34,21 +35,25 @@ namespace HexagonMobile
 
 				try
 				{
-					hex1 = Solver.BTHexesByTII[Solver.ShortStringToTII[FirstHexInput.Text]];
+					hex1 = Solver.BTHexesByTII[Solver.ShortStringToTII[FirstHexString]];
 				}
 				catch
 				{
-					FirstHexInput.Text = string.Empty;
-					FirstHexInput.Placeholder = "Not a hex (1,1)0101";
+					FirstHexString = string.Empty;
+					FHxm.Placeholder = "1st Hex Map X";
+					FHym.Placeholder = "1st Hex Map Y";
+					FHcord.Placeholder = "1st Hex Map Cord";
 				}
 				try
 				{
-					hex2 = Solver.BTHexesByTII[Solver.ShortStringToTII[SecondHexInput.Text]];
+					hex2 = Solver.BTHexesByTII[Solver.ShortStringToTII[SecondHexString]];					
 				}
 				catch
 				{
-					SecondHexInput.Text = string.Empty;
-					SecondHexInput.Placeholder = "Not a hex (1,1)0101";
+					SecondHexString = string.Empty; 
+					SHxm.Placeholder = "2nd Hex Map X";
+					SHym.Placeholder = "2nd Hex Map Y";
+					SHcord.Placeholder = "2nd Hex Map Cord";
 				}
 
 				if (hex1 == null || hex2 == null)
@@ -95,7 +100,7 @@ namespace HexagonMobile
 				}
 
 			}
-			catch (Exception)
+			catch (Exception exp)
 			{
 			}
 		}
@@ -103,6 +108,32 @@ namespace HexagonMobile
 		private void mapSizeChange(object sender, TextChangedEventArgs e)
 		{
 
+		}
+
+		private void FHxm_Completed(object sender, EventArgs e)
+		{
+			FHym.Focus();
+		}
+		private void FHym_Completed(object sender, EventArgs e)
+		{
+			FHcord.Focus();
+		}
+		private void FHcord_Completed(object sender, EventArgs e)
+		{
+			SHxm.Focus();
+		}
+
+		private void SHxm_Completed(object sender, EventArgs e)
+		{
+			SHym.Focus();
+		}
+		private void SHym_Completed(object sender, EventArgs e)
+		{
+			SHcord.Focus();
+		}
+		private void SHcord_Completed(object sender, EventArgs e)
+		{
+			//Submit(sender, e);
 		}
 	}
 }

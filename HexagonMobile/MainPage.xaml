@@ -11,27 +11,56 @@
             Spacing="25"
             VerticalOptions="Center">
             <VerticalStackLayout x:Name="VSL1" VerticalOptions="Start">
+
+                <HorizontalStackLayout>
+                    <Entry
+                        x:Name="FHxm"
+                        Completed="FHxm_Completed"
+                        Keyboard="Numeric"
+                        Placeholder="1st Hex Map X"
+                        FontFamily="monospace"/>
+                    <Entry
+                        x:Name="FHym"
+                        Completed="FHym_Completed"
+                        Keyboard="Numeric"
+                        Placeholder="1st Hex Map Y" 
+                        FontFamily="monospace"/>
+                    <Entry
+                        x:Name="FHcord"
+                        Completed="FHcord_Completed"
+                        Keyboard="Numeric"
+                        Placeholder="1st Hex Cord" 
+                        FontFamily="monospace"/>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout>
+                    <Entry
+                        x:Name="SHxm"
+                        Completed="SHxm_Completed"
+                        Keyboard="Numeric"
+                        Placeholder="2nd Hex Map X" 
+                        FontFamily="monospace"/>
+                    <Entry
+                        x:Name="SHym"
+                        Completed="SHym_Completed"
+                        Keyboard="Numeric"
+                        Placeholder="2nd Hex Map Y" 
+                        FontFamily="monospace"/>
+                    <Entry
+                        x:Name="SHcord"
+                        Completed="SHcord_Completed"
+                        Keyboard="Numeric"
+                        Placeholder="2nd Hex Cord" 
+                        FontFamily="monospace"/>
+                </HorizontalStackLayout>
+
                 <HorizontalStackLayout VerticalOptions="Start">
-                    <Label
-                        FontSize="18"
-                        HorizontalOptions="Start"
-                        Text="Hello" />
                     <Button
                         x:Name="SubmitBtn"
                         Clicked="Submit"
                         HorizontalOptions="End"
                         Text="Submit" />
                 </HorizontalStackLayout>
-                <Entry
-                    x:Name="FirstHexInput"
-                    Keyboard="Default"
-                    Placeholder="First Text Box (1,1)0101"
-                    />
-                <Entry
-                    x:Name="SecondHexInput"
-                    Keyboard="Default"
-                    Placeholder="Second Text Box (1,1)1517"
-                    />
             </VerticalStackLayout>
 
             <VerticalStackLayout x:Name="VSL2" />
