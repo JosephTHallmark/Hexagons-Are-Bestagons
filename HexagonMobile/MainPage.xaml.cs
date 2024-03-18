@@ -135,5 +135,20 @@ namespace HexagonMobile
 		{
 			//Submit(sender, e);
 		}
+
+		private void ClearBtn_Clicked(object sender, EventArgs e)
+		{
+			FHxm.Text = string.Empty;
+			FHym.Text = string.Empty; 
+			FHcord.Text = string.Empty;
+			SHxm.Text = string.Empty;
+			SHym.Text = string.Empty;
+			SHcord.Text = string.Empty;			
+		}
+
+		private void ClearBtn2_Clicked(object sender, EventArgs e)
+		{
+			VSL2.Clear();
+		}
 	}
 }

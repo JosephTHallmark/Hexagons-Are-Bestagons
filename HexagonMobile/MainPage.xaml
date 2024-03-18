@@ -11,50 +11,60 @@
             Spacing="25"
             VerticalOptions="Center">
             <VerticalStackLayout x:Name="VSL1" VerticalOptions="Start">
+                <Image Source="hexagonqr.png" />
+                <Label>This app is in an early alpha state and offered as is. Expect quriks that you will have to work around by yourself. Coordinates are (map number hoirzontal left to right, map number vertical top to bottom)coordinate on the map as listed (0101)</Label>
                 <HorizontalStackLayout>
-                    <Entry x:Name="mapSizeX" Keyboard="Numeric" FontFamily="monospace" Text="16" />
-                    <Entry x:Name="mapSizeY" Keyboard="Numeric" FontFamily="monospace" Text="17" />
+                    <Entry
+                        x:Name="mapSizeX"
+                        FontFamily="monospace"
+                        Keyboard="Numeric"
+                        Text="16" />
+                    <Entry
+                        x:Name="mapSizeY"
+                        FontFamily="monospace"
+                        Keyboard="Numeric"
+                        Text="17" />
                 </HorizontalStackLayout>
                 <HorizontalStackLayout>
                     <Entry
                         x:Name="FHxm"
                         Completed="FHxm_Completed"
+                        FontFamily="monospace"
                         Keyboard="Numeric"
-                        Placeholder="1st Hex Map X"
-                        FontFamily="monospace"/>
+                        Placeholder="1st Hex Map X" />
                     <Entry
                         x:Name="FHym"
                         Completed="FHym_Completed"
+                        FontFamily="monospace"
                         Keyboard="Numeric"
-                        Placeholder="1st Hex Map Y" 
-                        FontFamily="monospace"/>
+                        Placeholder="1st Hex Map Y" />
                     <Entry
                         x:Name="FHcord"
                         Completed="FHcord_Completed"
+                        FontFamily="monospace"
                         Keyboard="Numeric"
-                        Placeholder="1st Hex Cord" 
-                        FontFamily="monospace"/>
+                        Placeholder="1st Hex Cord" />
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout>
                     <Entry
                         x:Name="SHxm"
                         Completed="SHxm_Completed"
+                        FontFamily="monospace"
                         Keyboard="Numeric"
-                        Placeholder="2nd Hex Map X" 
-                        FontFamily="monospace"/>
+                        Placeholder="2nd Hex Map X" />
                     <Entry
                         x:Name="SHym"
                         Completed="SHym_Completed"
+                        FontFamily="monospace"
                         Keyboard="Numeric"
-                        Placeholder="2nd Hex Map Y" 
-                        FontFamily="monospace"/>
+                        Placeholder="2nd Hex Map Y" />
                     <Entry
                         x:Name="SHcord"
                         Completed="SHcord_Completed"
+                        FontFamily="monospace"
                         Keyboard="Numeric"
-                        Placeholder="2nd Hex Cord" 
-                        FontFamily="monospace"/>
+                        Placeholder="2nd Hex Cord" />
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout VerticalOptions="Start">
@@ -63,6 +73,16 @@
                         Clicked="Submit"
                         HorizontalOptions="End"
                         Text="Submit" />
+                    <Button
+                        x:Name="ClearBtn"
+                        Clicked="ClearBtn_Clicked"
+                        HorizontalOptions="End"
+                        Text="Clear input" />
+                    <Button
+                        x:Name="ClearBtn2"
+                        Clicked="ClearBtn2_Clicked"
+                        HorizontalOptions="End"
+                        Text="Clear output" />
                 </HorizontalStackLayout>
             </VerticalStackLayout>
 
